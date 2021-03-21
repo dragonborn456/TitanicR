@@ -1,0 +1,412 @@
+---
+title: ""
+author: ""
+date: ""
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 3
+  html_document:
+    df_print: paged
+mainfont: Times New Roman
+---
+\newpage
+# Chương 1: TỔNG QUAN VỀ ĐỀ TÀI
+
+## 1.1. Giới thiệu bài toán(https://www.kaggle.com/c/titanic)
+Sự kiện tàu Titanic chìm vào ngày 14 tháng 4 năm 1912 là 1 sự kiện vô cùng đau thương với những nạn nhân ở trên tàu. Để có thể dự đoán xem khả năng sống sót của 1 người khi ở trên Titanic, nhóm chúng tôi chọn đề tài "Dự đoán khả năng sống sót của các hành khách trên tàu Titanic" bằng những model khác nhau để đưa ra mô hình thuật toán tốt nhất cho đề tài này.
+
+Bài toán dự đoán khả năng sống sót trên tàu Titanic là 1 bài toán cơ bản giúp chúng tôi làm quen với quá trình mà 1 bài toán cần dự đoán những kết quả và sử dụng những kết quả đó cho quá trình thống kê hoặc cũng có thể đưa ra các cách giải quyết vấn đề cho bài toán đó. Đối với Titanic ta dự đoán khả năng sống sót của 1 người, từ đó ta xem xét các yếu tố có thể ảnh hưởng đến khả năng sống sót của người đó và đưa ra cách giải quyết vấn đề cho việc đảm bảo khả năng sống sót của 1 người.
+
+## 1.2. Mô tả tập dữ liệu
+
+### 1.2.1. Input
+Dữ liệu mà nhóm chúng tôi sử dụng cho đề tài này bao gồm 1 file train.csv và test.csv được đem xuống từ trang Kaggle
+
+train.csv gồm 891 dòng dữ liệu, các cột dữ liệu như sau:
+
+survival: Khả năng sống sót của 1 ngườn( 1: sống, 0: chết)
+
+plass: Loại vé
+
+sex: Giới tính
+
+Age: Tuổi
+
+sibsp: Số họ hàng của 1 người
+
+parch: Số người thân của 1 người
+
+ticket: Số vé
+
+fare: Giá vé
+
+Cabin: Khoang tàu
+
+embarked: Nơi lên tàu
+
+test.csv: Gồm 418 dòng, chứa các cột dữ liệu giống như train.csv ngoại trừ cột survival.
+  
+### 1.2.2. Output
+  Quá trình huấn luyện mô hình sẽ sử dụng tập train và cho ra mô hình. Áp dụng dự đoán cho file test. Kết quả sẽ là 1 file dữ liệu dự đoán khả năng sống sót của những hành khách ở trong tập test.
+
+## 1.3. Mô tả thuật toán
+
+Nhóm sử dụng những thuật toán sau để giải quyết cho bài toán trên:
+
+### 1.3.1. K Nearest Neighbor
+
+K Nearest Neighbor giúp ta tìm ra điểm K tối ưu nhất để xây dựng mô hình. Nếu k quá bé thì kết quả rất dễ bị ảnh hưởng bởi nhiễu và xuất hiện nhiều điểm ngoại lệ. Nếu k quá lớn thì độ lệch cũng sẽ lớn hơn. Đây là một trong các cách cơ bản để tính khoảng cách 2 điểm dữ liệu x, y có k thuộc tính
+
+Khoảng cách Euclidean được định nghĩa như sau:
+$$\sqrt{\sum_{i=1}^{k}\left(x_{i}-y_{i}\right)^{2}}$$
+
+### 1.3.2. Decision Tree
+
+Cây quyết định (Decision Tree) là một cây phân cấp có cấu trúc được dùng để phân lớp các đối tượng dựa vào dãy các luật. Các thuộc tính của đối tượng có thể thuộc các kiểu dữ liệu khác nhau như Nhị phân (Binary) , Định danh (Nominal), Thứ tự (Ordinal), Số lượng (Quantitative) trong khi đó thuộc tính phân lớp phải có kiểu dữ liệu là Binary hoặc Ordinal.[2]
+
+Trong bài toán của chúng tôi, chúng tôi sẽ áp dụng Decision Tree kết hợp với một số đặc trưng nhất định để tìm ra cây tốt nhất cho bài toán.
+
+### 1.3.3. Random Forests
+
+Random Forests là thuật toán học có giám sát. Nó có thể được sử dụng cho cả classification và regression. Nó cũng là thuật toán linh hoạt và dễ sử dụng nhất. Random forests tạo ra cây quyết định trên các mẫu dữ liệu được chọn ngẫu nhiên, được dự đoán từ mỗi cây và chọn giải pháp tốt nhất bằng cách bỏ phiếu. Nó cũng cung cấp một chỉ báo khá tốt về tầm quan trọng của tính năng.[1]
+
+Nó hoạt động theo bốn bước, hoạt động như hình:
+
+1. Chọn các mẫu ngẫu nhiên từ tập dữ liệu đã cho.
+
+2. Thiết lập cây quyết định cho từng mẫu và nhận kết quả dự đoán từ mỗi quyết định cây.
+
+3. Hãy bỏ phiếu cho mỗi kết quả dự đoán.
+
+4. Chọn kết quả được dự đoán nhiều nhất là dự đoán cuối cùng.
+
+\newpage
+
+```{r pressure, echo=FALSE, fig.cap="Random Forests", out.width = '50%'}
+knitr::include_graphics("C:/Users/Admin/Desktop/rf.png")
+```
+
+## 1.4. Mô tả quá trình đánh giá mô hình và sử dụng độ đo
+
+### 1.4.1. Đánh giá mô hình
+
+Cross validation là một phương pháp thống kê được sử dụng để ước lượng hiệu quả của các mô hình học máy. Nó thường được sử dụng để so sánh và chọn ra mô hình tốt nhất cho một bài toán. Kỹ thuật này dễ hiểu, dễ thực hiện và cho ra các ước lượng tin cậy hơn so với các phương pháp khác.[3]
+
+Phương pháp này phân chia dữ liệu thành k tập con có cùng kích thước. Tại mỗi vòng lặp sử dụng một tập con là tập thử nghiệm và các tập con còn lại là tập huấn luyện. Giá trị k thường là = 10. Ta có thể dùng một trong hai cách:
+
+•	Leave-one-out: k=số mẫu trong dữ liệu (dành cho tập dữ liệu nhỏ)
+
+•	Stratified cross-validation: dùng phương pháp lấy mẫu để các lớp trong từng tập con phân bố như trên toàn bộ dữ liệu.
+ 
+Cross validation là một kỹ thuật lấy mẫu để đánh giá mô hình học máy trong trường hợp dữ liệu không được dồi dào cho lắm.
+
+### 1.4.2. Mô tả độ đo
+
+Confusion Matrix là một bảng được sử dụng để mô tả hiệu suất của một mô hình phân loại. Nhóm chúng tôi sẽ tập trung sử dụng Accuracy, Precision và Recall được tính từ Confusion Matrix.[4]
+Accuracy: Tỷ lệ tổng số dự đoán đúng.
+
+Precision: Tỷ lệ các dự đoán đúng được lấy ra
+
+$$\text { Precision }=\frac{y_{\text {true }} \cap y_{\text {selected }}}{y_{\text {selected }}}$$
+
+
+Recall: Tỷ lệ các dự đoán được lấy ra là đúng
+
+$$\text { Recall }=\frac{y_{\text {true }} \cap y_{\text {selected }}}{y_{\text {true }}}$$
+
+```{r 2  , echo=FALSE, fig.cap="Confusion Matrix", out.width = '60%'}
+knitr::include_graphics("E:/Data mining/FinalTitanic/overleaf/cm.png")
+```
+\newpage
+
+# Chương 2: THỰC NGHIỆM ĐỀ TÀI
+
+Nhóm sẽ sử dụng ngôn ngữ R và dataset lấy từ trang Kaggle để thực nghiệm đề tài
+
+## 2.1. Chuẩn bị dữ liệu đầu vào
+### 2.1.1. Các Package
+
+Nhóm tiến hành load các package sẽ sử dụng cho việc thực nghiệm ví dụ như **caret** để tính **Confusion Matrix**,...
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tree)
+library(randomForest)
+library(dplyr)
+library(caret)
+```
+
+### 2.1.2. Dataset
+
+Load dữ liệu từ train.csv và test.csv, sau đó kết hợp 2 dữ liệu. Việc kết hợp 2 dữ liệu để xử lý những dữ liệu rỗng và những dữ liệu chưa được làm rõ. Quá trình load như hình 2.2. Để chi tiết về từng cột dữ liệu, dùng str() như hình 2.3 để hiểu rõ hơn về cấu trúc của dữ liệu sau khi gộp.
+
+```{r q1a}
+trainTitanic <- read.csv("train.csv", stringsAsFactors = FALSE)
+testTitanic <- read.csv("test.csv",stringsAsFactors = FALSE)
+# Kết hợp 2 file
+titanic <- bind_rows(trainTitanic,testTitanic)
+str(titanic)
+```
+
+## 2.2. Làm sạch dữ liệu
+Tiến hành lọc đi các dữ liệu NA trong dataset và biến đổi 1 số dữ liệu có sẵn
+
+### 2.2.1. Kiểm tra các  dữ liệu rỗng
+```{r q1b}
+# Kiểm tra dữ liệu rỗng ở các cột
+colSums(is.na(titanic))
+colSums(titanic=="")
+```
+
+
+### 2.2.2. Dữ liệu Name
+
+Trong quá trình huấn luyện mô hình, **Name** không có giá trị đóng góp cho việc dự đoán. Thay vào đó ta biến đổi **Name** thành **Title**. Với **Title**, ta có thể biết được giới tính của 1 người( Mr, Miss) và địa vị( Capt, Major)
+
+```{r q21a}
+sum(is.na(titanic$Name))
+#Tách Title khỏi Name
+titanic$Title <- gsub('(.*, )|(\\..*)', '', titanic$Name)
+table(titanic$Sex, titanic$Title)
+```
+
+  Gộp các Title đặc biệt thành Others
+  
+```{r q21b}
+#Gộp các Title đặc biệt lại với nhau
+rare_title <- c('Dona', 'Lady', 'the Countess','Capt', 'Col', 'Don', 
+                'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer')
+
+# Also reassign mlle, ms, and mme accordingly
+titanic$Title[titanic$Title == 'Mlle']        <- 'Miss' 
+titanic$Title[titanic$Title == 'Ms']          <- 'Miss'
+titanic$Title[titanic$Title == 'Mme']         <- 'Mrs' 
+titanic$Title[titanic$Title %in% rare_title]  <- 'Others'
+
+# Đếm Title theo giới tính
+table(titanic$Sex, titanic$Title)
+```
+
+### 2.2.3. Dữ liệu SibSp và Parch
+
+Ta biến đổi từ **SipSp** và **Parch** thành **FSize**( Family Size) để dữ liệu được tổng quát hơn.
+
+```{r q22a}
+#Gộp SibSp và Parch thành Family
+sum(is.na(titanic$SibSp))
+sum(is.na(titanic$Parch))
+titanic$Fsize <- titanic$SibSp + titanic$Parch + 1 
+# Khả năng sống sót của các gia đình
+table(titanic$Survived, titanic$Fsize)
+```
+
+### 2.2.4. Chuyển các cột thành Factor
+
+```{r q23a}
+factor_vars <- c('PassengerId','Pclass','Sex','Embarked',
+               'Fsize','Survived','Title')
+
+titanic[factor_vars] <- lapply(titanic[factor_vars], function(x) as.factor(x))
+```
+
+### 2.2.5. Dữ liệu Age và Fare
+
+Sử dụng package **mice** để làm đầy các dữ liệu còn thiếu ở Age và Fare. Thư viện **mice** cho phép ta lấp đầy những dữ liệu rỗng dựa vào việc dự đoán từ những dữ liệu có sẵn trong dataframe như Cabin, Ticket,....
+
+```{r q24a}
+library(mice)
+set.seed(123)
+mice_predict <- mice(titanic[, !names(titanic) %in% c('PassengerId','Name','Ticket','Cabin','Family','Survived','Fsize','Title')], method='rf') 
+```
+
+```{r q24b}
+titanic_mice <-complete(mice_predict)
+```
+
+   Đưa dữ liệu mới vào lại "titanic"
+```{r q24c}
+titanic$Age <- titanic_mice$Age
+titanic$Fare <- titanic_mice$Fare
+titanic$Embarked <- titanic_mice$Embarked
+colSums(is.na(titanic))
+```
+### 2.2.6. Chia "titanic" thành train và test như ban đầu
+
+Chia Train( 891 dòng) và Test( 418) trở lại ban đầu. Đồng thời, chia tập train ra thành 1 tập train( 500 dòng) và 1 tập validation( 391 dòng) để kiểm tra mô hình sau khi huấn luyện mô hình từ tập train.
+
+```{r q3a}
+LT=dim(trainTitanic)[1]
+train_im<- titanic[1:LT,c("Survived","Pclass","Sex","Age","Fare","SibSp","Parch", "Title", "Fsize")]
+test_im<-titanic[(LT+1):1309,c("Pclass","Sex","Age","SibSp","Parch","Fare", "Title", "Fsize")]
+ind<-sample(1:dim(train_im)[1],500)
+train<-train_im[ind,]
+traincv<-train_im[-ind,]
+test<-test_im
+```
+
+## 2.3. Xây dựng các mô hình
+
+Tiến hành áp dụng các phương thức khác nhau để tạo mô hình và tiến hành dự đoán. Sau đó sử dụng confusion matrix để đưa ra Accuracy, Precision và recall cho từng mô hình.
+  
+### 2.3.1.  Xây dựng mô hình K-Nearest Neighbors
+
+Áp dụng Leave-One-Out Cross Validation để chọn ra K tốt nhất và tuneLength = 20 để tính toán mô hình với 20 số k khác nhau.
+
+```{r q41a}
+#kNN
+knnTrain = train;
+knnTest = test;
+trainCtrl = trainControl( method="LOOCV");
+knn_fit = train( Survived~.,data=knnTrain,method="knn", trControl=trainCtrl, preProcess=c("center","scale"), tuneLength=20 );
+knn_fit
+```
+  
+Ta có K=31 là tốt nhất cho mô hình knn.
+  
+Sử dụng thư viện "caret" để đưa ra confusion matrix
+
+```{r q41b}
+#Predict Accuracy cho tập Train
+knn_train_pred = predict( knn_fit, traincv);
+#confusionMatrix(knn_train_pred, traincv$Survived)
+# Precision, Recall, F1-score
+confusionMatrix(knn_train_pred, traincv$Survived, mode = "prec_recall", positive="0") 
+```
+
+Như vậy ta có Accuracy của  model knn là **0.7954**, Precison là **0.8247** và Recall là **0.8519**
+
+**Dự đoán kết quả cho model knn và xuất ra file .csv**
+```{r q41c}
+knn_test_pred = predict( knn_fit, knnTest)[1:418];
+knnModel = data.frame(PassengerId=testTitanic$PassengerId, Survived=knn_test_pred);
+write.csv( knnModel, "knnModel.csv", row.names=FALSE, quote=FALSE );
+```
+
+
+
+### 2.3.2 Xây dựng mô hình Decision Tree
+
+Với Decision Tree, khi dữ liệu train được đưa vào, có 6 đặc trưng được chọn để thực hiện quá trình train là PClass, FSize, Title, Age.
+
+```{r q42a}
+#Xây dựng Decision Tree model
+library(tree)
+tree_model = tree( Survived ~ Pclass + Fsize + Title + Age  , data=train );
+summary( tree_model )
+```
+
+    Tiến hành tỉa cây( Pruning)
+```{r q42b}
+cv_tree_model = cv.tree( tree_model, FUN=prune.misclass);
+best_terminal_node_idx = which.min(cv_tree_model$dev);
+best_terminal_nodes = cv_tree_model$size[best_terminal_node_idx];
+pruned_tree = prune.misclass(tree_model,best=best_terminal_nodes);
+plot( pruned_tree );
+text( pruned_tree, pretty=0)
+```
+
+Confusion Matrix
+
+```{r q42c}
+pruned_tree_train_pred = predict( pruned_tree, traincv, type="class");
+confusionMatrix(pruned_tree_train_pred, traincv$Survived, mode = "prec_recall", positive="0")
+```
+
+Như vậy ta có Accuracy của mô hình decision tree là **0.8031**, Precision là **0.8168** và Recall là **0.8807** 
+
+**Dự đoán kết quả cho decision tree model và xuất ra file .csv**
+```{r q42d}
+pruned_tree_pred = predict( pruned_tree, test, type ="class")[1:418]
+dtModel = data.frame(PassengerId=testTitanic$PassengerId, Survived=as.numeric(pruned_tree_pred)-1);
+write.csv( dtModel, "DecisionTreeModel.csv", row.names=FALSE, quote=FALSE );
+``` 
+
+
+### 2.3.3 Xây dựng mô hình Random Forests
+
+Áp dụng thuật toán randomForest() để tiến hành xây dựng mô hình với các tham số **ntree**( số cây) = 1000 và **mtry**( số biến kết hợp) = 1
+
+```{r q43a}
+#Xây dựng Random Forest model
+library(randomForest);
+rf_model = randomForest( factor(Survived) ~ . , data=train,ntree=1000, mtry=1, importance=TRUE );
+rf_model
+
+```
+
+Confusion matrix
+    
+```{r q43d}
+rf_train_pred = predict( rf_model, newdata=traincv);
+confusionMatrix( rf_train_pred, traincv$Survived, mode = "prec_recall", positive="0")
+```
+
+Như vậy ta có Accuracy của mô hình Random Forests là **0.8107**, Precision là **0.8238** và Recall là **0.8848**
+
+**Dự đoán kết quả cho random forest model và xuất ra file .csv**
+
+```{r q43e}
+rf_pred = predict( rf_model, newdata=test)[1:418]
+rfModel = data.frame(PassengerId=testTitanic$PassengerId, Survived=as.numeric(rf_pred)-1);
+write.csv( rfModel, "RandomForestModel.csv", row.names=FALSE, quote=FALSE )
+```
+
+
+## 2.4. Tổng hợp kết quả
+Sau khi tính toán các độ đo cần thiết, ta có bảng dữ liệu liệt kê lại các độ đo cho từng mô hình: 
+
+\newpage
+
+```{r 3, echo=FALSE, fig.cap="So sánh các kết quả", out.width = '70%'}
+knitr::include_graphics("C:/Users/Admin/Desktop/table.png")
+```
+
+
+Trong trường hợp này, ta kết luận mô hình Random Forest có thể được xem là tốt nhất do các độ đo của mô hình này đạt giá trị cao nhất so với các mô hình còn lại.
+
+## 2.5. Dự đoán kết quả
+Output của chúng ta sẽ là dữ liệu từ RandomForest.csv và thứ hạng trên Kaggle như hình:
+
+```{r 4, echo=FALSE, fig.cap="CSV", out.width = '100%'}
+knitr::include_graphics("C:/Users/Admin/Desktop/csvv.png")
+```
+
+
+```{r 5, echo=FALSE, fig.cap="Kaggle", out.width = '100%'}
+knitr::include_graphics("C:/Users/Admin/Desktop/kaggle.png")
+```
+
+\newpage
+# CHƯƠNG 3: KẾT LUẬN
+## 3.1. Đóng góp của đề tài
+Hiểu được từng định nghĩa cho từng mô hình mà nhóm nghiên cứu.
+  
+Xây dựng được các model liên quan đến những lý thuyết mà nhóm nghiên cứu. Áp dụng các độ đo **Accuracy**, **Precision**, **Recall** để chọn ra mô hình tốt nhất cho thực nghiệm chính là Random Forests.
+  
+Để giải thích việc Random Forests là mô hình tốt nhất,  nhóm chúng tôi trước khi tiến hành việc huấn luyên mô hình cho Random Forests đã chọn các tham số **ntree** và **mtry** cho thuật toán. Điều này sẽ giúp cho việc huấn luyện mô hình Random Forests diễn ra khá tốt. Decision Tree cũng ra kết quả khá tốt chỉ đứng sau Random Forest, tuy nhiên mô hình Decision Tree trong quá trình tỉa cành đã không chọn siêu tham số **k** nên kết quả mô hình Decision Tree không đạt được kết quả tốt nhất.
+
+## 3.2. Hạn chế của đề tài
+Vì chúng tôi chọn đề tài liên quan đến Titanic nên dữ liệu đầu vào của nhóm khá ít ( chỉ 1309 dòng) nên việc sử dụng các thuật toán để huấn luyện mô hình với lượng dữ liệu ít ỏi sẽ đưa ra 1 vài thông số chưa thực sự hài lòng.
+
+## 3.2. Phương hướng phát triển
+Trong tương lai, nhóm sẽ tiếp tục nghiên cứu thêm về các thuật toán để xây dựng nhiều model hơn như **Logistic Regression**, **Ridge Regression**,... để làm phong phú hơn các cách thức dự đoán.
+Tìm những dữ liệu lớn hơn, xứng tầm Big Data để có thể đánh giá một cách chính xác hơn khi áp dụng các thuật toán để xây dựng model.
+
+\newpage   
+# TÀI LIỆU THAM KHẢO
+[1] trituenhantao. Cây Quyết Định (Decision Tree). 2019. https://trituenhantao.io/kien-thuc/decision-tree/. ngày truy cập 24/01/2021
+
+[2] Nguyen Duy Sim. Phân lớp bằng Random Forests trong Python. 2018. https://viblo.asia/p/phan-lop-bang-random-forests-trong-python-djeZ1D2QKWz. ngày truy cập 24/01/2021
+
+[3] trituenhantao. Giới thiệu về k-fold cross-validation. 2020. https://trituenhantao.io/kien-thuc/gioi-thieu-ve-k-fold-cross-validation/. ngày truy cập 24/01/2021
+
+[4] Phạm Văn Toàn. Một  vài  hiểu  nhầm  khi  mới  học ma-chine learning. 2018.https://trituenhantao.io/kien-thuc/gioi-thieu-ve-k-fold-cross-validation/. ngày truy cập 24/01/2021
+
+
+
+
+
+
